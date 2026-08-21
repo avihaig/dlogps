@@ -1,0 +1,11 @@
+# The second half of the training root: the same 46 cables as release.yaml,
+# released from poses the first half never used. Only `seed` and `out_dir`
+# differ; per-cable RNG is seeded [seed, cable_id], so one seed change redraws
+# every release pose while the cable itself is bit-identical.
+# scripts/merge_release_train.py joins release_v1 and test_v1 into
+# data/release_train (46 cables x 100 episodes), the root every reported run
+# trains on.
+extends: release.yaml
+
+out_dir: data/test_v1
+seed: 1

@@ -1,0 +1,26 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# The dataset lives outside the checkout; data/ is a symlink (scripts/link_data.sh)
+/data
+
+# Training outputs. The small per-run records that back the paper are tracked
+# under results/runs/ and results/tables/; everything else a run writes is not.
+/results/*
+!/results/README.md
+!/results/runs/
+!/results/tables/
+results/runs/**/checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/

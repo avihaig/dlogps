@@ -1,0 +1,57 @@
+[project]
+name = "dlogps"
+version = "1.0.0"
+description = "Which structural prior belongs in global attention? A controlled study of a hybrid graph transformer as a cable-dynamics model."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.13"
+authors = [
+    { name = "Avihai Giuili" },
+    { name = "Rotem Atari" },
+]
+dependencies = [
+    # Pinned to the version every reported run trained and evaluated with.
+    # The stock PyPI wheel already ships CUDA; no extra index is needed.
+    "torch==2.11.0",
+    "numpy>=1.24",
+    "pyyaml>=6.0",
+    "draccus>=0.8",
+    "matplotlib>=3.8",
+    "tqdm>=4.66",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers"
+markers = [
+    "contract: a public API's shape and invariants",
+    "claim(text): a property the paper asserts; text names the property",
+    "regression(bug): pins a specific fixed bug",
+    "scaffolding(spec): written to converge one design decision",
+    "legacy: predates the tier standard",
+    "integration: end-to-end; slower",
+]
+# `src` so the suite runs against the checkout with or without an editable
+# install, and `.` so `tests.fake_data` imports by the same name from both.
+pythonpath = ["src", "."]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dlogps"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+exclude = ["**/__pycache__", "**/.venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501"]

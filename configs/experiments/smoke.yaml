@@ -1,0 +1,52 @@
+# Smoke run on the two bundled sample cables: the whole pipeline (statistics,
+# training, checkpoint, autoregressive rollout, scoring, artifacts, figures) in
+# a few minutes on a CPU. Its numbers mean nothing; it proves the wiring.
+# Usage: scripts/smoke.sh, or
+#   python -m dlogps.harness.run_experiment --config_path configs/experiments/smoke.yaml
+experiment: smoke
+label: smoke
+data: assets/sample_v1
+eval_data: assets/sample_test_v1
+variant: A
+results_root: results
+save_preds: false
+
+train:
+  steps: 200
+  batch_size: 32
+  sigma: 0.1
+  lr: 0.001
+  lr_final: 0.0001
+  weight_decay: 0.0
+  grad_clip: 1.0
+  seed: 0
+  eval_every: 50
+  eval_batches: 4
+  device: cpu
+  history_frames: 70
+  param_encoding: designed
+
+model:
+  d_model: 64
+  n_heads: 8
+  n_layers: 2
+  dropout: 0.0
+  attn_dropout: 0.0
+  use_global: true
+  use_local: true
+
+split:
+  held_out_fraction: 0.0
+  d_close_diameters: 1.5
+  c_far_segments: 4
+
+checkpoint_at: []
+
+eval:
+  stage: unseen_test
+  limit: 4
+  horizons: [1, 10, 50, 100, 200]
+  arms: model
+
+plots:
+  best_by: rel_l2_at_h200

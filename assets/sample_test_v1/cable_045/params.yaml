@@ -1,0 +1,169 @@
+cable:
+  id: 45
+  material: M5_very_stiff
+  length: 1.6
+  n_segments: 32
+  diameter: 0.0015
+  density: 8000.0
+  bend_stiffness: 1000000000.0
+  twist_bend_ratio: 0.38
+  joint_damping: 0.01
+  weld_dampratio: 10.0
+  start_height: 1.9
+derived:
+  effective_linear_density: 0.014419910490637353
+  nominal_linear_density: 0.01413716694115407
+  twist_stiffness: 380000000.0
+play:
+  record_hz: 500.0
+  timeout_s: 5.0
+  min_frames: 250
+  settle_v_tol: 0.01
+  settle_arm_v_tol: 0.5
+  settle_window_s: 0.5
+  pose_dwell_s: 5.0
+  pose_release_v_max: 0.3
+  pose_max_resamples: 3
+  reach_horizon_s: 25.0
+  reach_ramp_s: 0.0
+  v_cap: 0.05
+  w_cap: 0.5
+  span_fraction: 0.25
+  box_half_extent: 0.5
+  cone_half_angle: 0.785
+  min_gripper_distance: 0.1
+  monitor_v_max: 0.1
+  monitor_window_s: 0.5
+  require_arming: true
+release:
+  release_poses:
+  - - 0.6537799253728567
+    - 0.17790568897487083
+    - 1.8659336876394406
+    - -0.405014127587585
+    - 0.6538517963343559
+    - -0.5300567868299938
+    - -0.35704507785469647
+    - 0.81997061126164
+    - 0.05670897616643576
+    - 1.7316157765988107
+    - 0.6247982000024276
+    - 0.13442142420823963
+    - -0.6190481146849262
+    - 0.4564400526822704
+  - - 0.6589565326238512
+    - 0.22106350268211838
+    - 1.7007242342424513
+    - 0.4139395170408178
+    - 0.8695291264008684
+    - 0.10537285246507565
+    - -0.24793091081172342
+    - 0.9617456008230738
+    - 0.0812476848709645
+    - 1.6933612595988397
+    - 0.17802937348354275
+    - 0.20218506435916442
+    - -0.6051857349507029
+    - 0.7491174595077299
+  release_v_p95:
+  - 0.0034984859754215963
+  - 0.003059478059058448
+outcome:
+  n_episodes_done: 2
+  n_frames: 2410
+  padded_length: 2383
+  frames_per_episode:
+  - 1199
+  - 1211
+  settled:
+  - true
+  - true
+  armed:
+  - true
+  - true
+  settle_time_s:
+  - 2.5157999999898806
+  - 2.542259999989774
+  pose_flags:
+  - - pose move exceeded the quasi-static speed cap (max 0.153 m/s)
+  - - pose move exceeded the quasi-static speed cap (max 0.145 m/s)
+schema:
+  vertex_pos:
+    shape:
+    - 2
+    - 2383
+    - 33
+    - 3
+    dtype: float64
+    unit: m
+  vertex_vel:
+    shape:
+    - 2
+    - 2383
+    - 33
+    - 3
+    dtype: float64
+    unit: m/s
+  edge_quat:
+    shape:
+    - 2
+    - 2383
+    - 32
+    - 4
+    dtype: float64
+    unit: unit quaternion, wxyz
+  edge_omega:
+    shape:
+    - 2
+    - 2383
+    - 32
+    - 3
+    dtype: float64
+    unit: rad/s
+  edge_wrench:
+    shape:
+    - 2
+    - 2383
+    - 32
+    - 6
+    dtype: float64
+    unit: N*m torque (0:3), N force (3:6)
+  t:
+    shape:
+    - 2
+    - 2383
+    dtype: float64
+    unit: s since that episode's release, then one -1 stop, then NaN
+  episode_lengths:
+    shape:
+    - 2
+    dtype: int64
+    unit: frames, real count per episode
+  record_hz:
+    shape: []
+    dtype: float64
+    unit: Hz, REQUESTED; take dt from np.diff(t)
+  cable_id:
+    shape: []
+    dtype: int64
+    unit: ''
+  length:
+    shape: []
+    dtype: float64
+    unit: m
+  diameter:
+    shape: []
+    dtype: float64
+    unit: m
+  bend_stiffness:
+    shape: []
+    dtype: float64
+    unit: Pa
+  joint_damping:
+    shape: []
+    dtype: float64
+    unit: N*m*s/rad
+  effective_linear_density:
+    shape: []
+    dtype: float64
+    unit: kg/m

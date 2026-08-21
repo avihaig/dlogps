@@ -1,0 +1,54 @@
+# Structure-free baselines: the per-node MLP and the global LSTM. Same training
+# protocol and evaluation as the GPS rows; only `model.arch` and the width
+# move, set per arm by scripts/train_baselines.sh (mlp_pernode at d_model 2048,
+# lstm_global at d_model 256; both three layers). `variant` is inert for these
+# arms: a structure-free model has no bias slot, and the runner records the
+# field for every run regardless.
+experiment: structfree
+label: mlp_pernode_s0
+data: data/release_train
+eval_data: data/unseen_cables_test
+variant: A
+results_root: results
+save_preds: false
+
+train:
+  steps: 100000
+  batch_size: 512
+  sigma: 0.1
+  lr: 0.001
+  lr_final: 0.0001
+  weight_decay: 0.0
+  grad_clip: 1.0
+  seed: 0
+  eval_every: 500
+  eval_batches: 32
+  device: cuda
+  history_frames: 70
+  param_encoding: designed
+
+model:
+  arch: mlp_pernode
+  d_model: 2048
+  n_layers: 3
+  dropout: 0.0
+  attn_dropout: 0.0
+
+split:
+  held_out_fraction: 0.0
+  d_close_diameters: 1.5
+  c_far_segments: 4
+
+# Only the final checkpoint is reported, so no mid-run snapshots are taken; the
+# runner always writes and scores step 100000.
+checkpoint_at: []
+
+eval:
+  stage: unseen_test
+  limit: 400
+  horizons: [1, 10, 50, 100, 200, 400]
+  arms: model
+
+plots:
+  best_by: rel_l2_at_h200
+

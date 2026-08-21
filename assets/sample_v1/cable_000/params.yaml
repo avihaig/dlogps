@@ -1,0 +1,169 @@
+cable:
+  id: 0
+  material: M1_very_soft
+  length: 0.8
+  n_segments: 32
+  diameter: 0.0025
+  density: 1000.0
+  bend_stiffness: 1000000.0
+  twist_bend_ratio: 0.38
+  joint_damping: 0.0001
+  weld_dampratio: 10.0
+  start_height: 1.1
+derived:
+  effective_linear_density: 0.005235987829128892
+  nominal_linear_density: 0.004908738521234052
+  twist_stiffness: 380000.0
+play:
+  record_hz: 500.0
+  timeout_s: 5.0
+  min_frames: 250
+  settle_v_tol: 0.01
+  settle_arm_v_tol: 0.5
+  settle_window_s: 0.5
+  pose_dwell_s: 5.0
+  pose_release_v_max: 0.3
+  pose_max_resamples: 3
+  reach_horizon_s: 25.0
+  reach_ramp_s: 0.0
+  v_cap: 0.05
+  w_cap: 0.5
+  span_fraction: 0.25
+  box_half_extent: 0.5
+  cone_half_angle: 0.785
+  min_gripper_distance: 0.1
+  monitor_v_max: 0.1
+  monitor_window_s: 0.5
+  require_arming: true
+release:
+  release_poses:
+  - - 0.3067680018235222
+    - 0.3009179995435613
+    - 1.0812604604475995
+    - 0.7730260775956674
+    - 0.5386409400043988
+    - -0.28916070959824886
+    - 0.16935969158236028
+    - 0.4031844932505667
+    - 0.2752190083823948
+    - 1.1447944436991033
+    - 0.2800681799850988
+    - 0.18400669642815942
+    - 0.8256858266684549
+    - -0.4538130296369417
+  - - 0.3387655250613631
+    - -0.014464907507953843
+    - 1.0226281726710438
+    - -0.44984280879430244
+    - 0.8659318673707453
+    - -0.21470409831400128
+    - 0.04129889362971408
+    - 0.4697751577403714
+    - -0.1276999267511036
+    - 1.1214983800326914
+    - 0.03386709573645552
+    - 0.21600133996412324
+    - 0.8809336982293436
+    - 0.4197049681431624
+  release_v_p95:
+  - 0.00331564352898418
+  - 0.000766178600546766
+outcome:
+  n_episodes_done: 2
+  n_frames: 1309
+  padded_length: 2383
+  frames_per_episode:
+  - 661
+  - 648
+  settled:
+  - true
+  - true
+  armed:
+  - true
+  - true
+  settle_time_s:
+  - 1.38725999999442
+  - 1.3586999999945348
+  pose_flags:
+  - []
+  - []
+schema:
+  vertex_pos:
+    shape:
+    - 2
+    - 2383
+    - 33
+    - 3
+    dtype: float64
+    unit: m
+  vertex_vel:
+    shape:
+    - 2
+    - 2383
+    - 33
+    - 3
+    dtype: float64
+    unit: m/s
+  edge_quat:
+    shape:
+    - 2
+    - 2383
+    - 32
+    - 4
+    dtype: float64
+    unit: unit quaternion, wxyz
+  edge_omega:
+    shape:
+    - 2
+    - 2383
+    - 32
+    - 3
+    dtype: float64
+    unit: rad/s
+  edge_wrench:
+    shape:
+    - 2
+    - 2383
+    - 32
+    - 6
+    dtype: float64
+    unit: N*m torque (0:3), N force (3:6)
+  t:
+    shape:
+    - 2
+    - 2383
+    dtype: float64
+    unit: s since that episode's release, then one -1 stop, then NaN
+  episode_lengths:
+    shape:
+    - 2
+    dtype: int64
+    unit: frames, real count per episode
+  record_hz:
+    shape: []
+    dtype: float64
+    unit: Hz, REQUESTED; take dt from np.diff(t)
+  cable_id:
+    shape: []
+    dtype: int64
+    unit: ''
+  length:
+    shape: []
+    dtype: float64
+    unit: m
+  diameter:
+    shape: []
+    dtype: float64
+    unit: m
+  bend_stiffness:
+    shape: []
+    dtype: float64
+    unit: Pa
+  joint_damping:
+    shape: []
+    dtype: float64
+    unit: N*m*s/rad
+  effective_linear_density:
+    shape: []
+    dtype: float64
+    unit: kg/m

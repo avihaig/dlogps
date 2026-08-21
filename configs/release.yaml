@@ -1,0 +1,109 @@
+# The released training data: pose the welded cable, release both ends at
+# t = 0, record the free fall / landing / pile until the cable settles or the
+# recording times out. Self-collision is permitted and expected. Read by the
+# MuJoCo 3.9.0 generator that produced the dataset (docs/data.md); kept here as
+# the exact record of every physical and protocol value. Paths are relative to
+# the repository root.
+out_dir: data/release_v1
+seed: 0
+cables_csv: configs/release_cables.csv
+
+# Identical for every cable: varying the solver per row would confound the
+# material sweep with a numerics sweep.
+scene:
+  timestep: 4.2e-4 # [s]
+  integrator: implicitfast
+  gravity: [0.0, 0.0, -9.81] # [m/s^2]; the dataset's floor is the plane z = 0
+  torquescale: 100.0 # weld torque-to-force scaling [m]
+  marker_radius: 0.008 # gripper visual sphere only [m]
+  n_feature_points: 32 # CableEnv state bundle; the recorder reads all segments
+  # Rest is decided on the p95 of per-vertex speed, never on kinetic energy:
+  # energy is mass-weighted and this population's mass spans 144x, so one joule
+  # threshold is a ~12x-varying speed threshold across the grid.
+  build_settle_v_tol: 1.0e-3 # p95 vertex speed [m/s] ending the build settle
+  # 8.0, not 3.0: cables 012, 015 and 039 reach 1.0e-3 only at 4.21, 5.29 and
+  # 4.89 s (p95 floors 4.6e-6, 8.1e-5, 9.4e-6). The tolerance was right and the
+  # cap was wrong. It breaks early on convergence, so the cost falls on those
+  # rows alone; the other seven corners settle in 0.54 to 2.16 s.
+  build_settle_max_s: 8.0 # cap [s] on the build settle
+  # CableEnv's own KE settle is bypassed (scene.RESET_SETTLE_BYPASS_TOL), so it
+  # runs exactly one settle_check_every chunk and its step cap never binds. The
+  # chunk is kept because it is what calls _raise_if_diverged at reset.
+  settle_max_steps: 50000
+  settle_check_every: 100
+  # MuJoCo's 0.02 s default is ~48 steps here, which a cable falling at several
+  # m/s outruns: it sinks centimetres into whatever it lands on before the
+  # solver arrests it. 8.4e-4 is 2*timestep, the stiffest stable value, the same
+  # rule the grasp welds use.
+  contact_timeconst: 8.4e-4
+  contact_dampratio: 1.0
+episode:
+  # 500 Hz is the coarsest rate keeping per-frame motion relative to the cable
+  # centroid under 0.5 segment lengths at p99 across the stiffness range. The
+  # achieved rate is quantized to whole sim steps: 476.19 Hz at this timestep.
+  record_hz: 500.0 # REQUESTED rate [Hz]; consumers must use diff(t)
+  # Sets the dataset's padded episode length: it bounds record_fall's frame
+  # buffer, so no episode can exceed it and padding cannot overflow. 5.0 s
+  # against a measured worst settle of 2.93 s over 38 corner episodes (longest
+  # 1397 frames on cable 045), so 1.7x margin.
+  timeout_s: 5.0 # hard cap on the recorded fall [s]
+  min_frames: 250 # discard an episode shorter than this; shortest measured was 513
+  # Every settle / arm / release decision reads the p95 of per-vertex speed. max
+  # stays with divergence detection only: on a settled pile one chattering end
+  # vertex pins max at ~1.9e-2 m/s while p95 reads 4.4e-3, and in air p95 tracks
+  # max within 4% (argmax was an end vertex in 0 of 132 settle samples).
+  settle_v_tol: 1.0e-2 # post-release rest p95 [m/s]
+  settle_arm_v_tol: 0.5 # p95 must EXCEED this before settling can trigger [m/s]
+  settle_window_s: 0.5 # once armed, p95 must stay below the tol this long [s]
+  # Measured: the 10 corners settle between 1.31 s (000) and 2.56 s (044)
+  # against the 10.0 s timeout, 1.05x to 1.68x the times the old KE rule gave.
+  #
+  # A FIXED dwell, with no early break, because no wait-until-quiet rule works
+  # here: forced to run 4 s the p95 oscillates 1.5e-3 to 2.3e-2 m/s (soft,
+  # envelope flat over all 4 s, period ~0.5 s) with argmax mid-cable, so the
+  # sagging span swings as a pendulum instead of ringing down. 1.5 s takes the
+  # release p95 from 4.7e-2 / 8.5e-2 (the old 1-step settle) to 1.5e-2 / 1.6e-2.
+  #
+  # 5.0 buys the tail rather than the bulk: the pendulum envelope is flat, so
+  # the extra 3.5 s does not damp it, it lands the release on a later point of
+  # a swing whose period is ~0.5 s. It is the cheap half of the slow-release
+  # pair; reach_horizon_s is the half that reduces the swing in the first place.
+  pose_dwell_s: 5.0 # fixed pre-release dwell [s]
+  # An OUTLIER CATCHER, not a quality gate, and not a speed control: it rejects
+  # and resamples, so tightening it costs rows, never motion. At 3.0e-2 it
+  # rejects cables 015, 032 and 039, and a dwell sweep shows resampling cannot
+  # rescue them: p95 is flat out to 8 s on 012 (1.8e-2 -> 1.9e-2), 015 (5.8e-2
+  # -> 5.7e-2) and 039 (5.3e-1 -> 3.2e-1). The residual is a property of the
+  # cable and the reach, not of the pose draw, so a 3.0e-2 gate would delete 3
+  # of 46 rows for an undiagnosed cause.
+  #
+  # 3.0e-1 clears every measured release except 039's, and those numbers come
+  # from a reach 2.5x faster than this config's, so whether 039 now passes is
+  # a question the run answers rather than one this value settles. The actual
+  # p95 is recorded per episode: filter on measured numbers at analysis time.
+  pose_release_v_max: 3.0e-1 # release-instant p95 ceiling [m/s]
+  pose_max_resamples: 3 # RESAMPLES, so at most 4 reaches, each ~20 s of wall
+  # capped_twist moves at min(|dp|/horizon, v_cap), so the reach COMPLETES iff
+  # |dp| <= v_cap * reach_horizon_s. Measured travel on this population is p99
+  # 0.98 m and max 1.04 m at L = 1.6: a gripper starts at L/2 while the box is
+  # centred between the two, so length sets the travel. 0.05 x 25.0 = 1.25 m.
+  #
+  # A short budget does not fail, it falls short. The grippers stop mid-reach
+  # and the cable releases nearly straight, which reads downstream as a
+  # population that never self-contacts.
+  #
+  # The HORIZON is the slowness knob, not the cap. Speed is |dp|/horizon for
+  # every cable inside the cap, so a longer horizon slows the whole population;
+  # a lower cap slows only the far-travelling ones, and only by starving them.
+  reach_horizon_s: 25.0 # pose-move horizon [s]; the move runs it to completion
+  v_cap: 0.05 # linear gripper cap during posing [m/s]
+  w_cap: 0.5 # angular gripper cap during posing [rad/s]
+  # The ends-come-closer knob: separation ~ uniform(min_gripper_distance,
+  # span_fraction * L). At 0.25 / 0.10 the measured separation is 0.06L to
+  # 0.25L, median 0.18L, so the cable is released well slack at every length.
+  span_fraction: 0.25 # max end separation as a fraction of L
+  box_half_extent: 0.5 # sampling box half-extent about the gripper midpoint [m]
+  cone_half_angle: 0.785 # pi/4 end-facing cone [rad]
+  min_gripper_distance: 0.10 # floor on the sampled end separation [m]
+  monitor_v_max: 0.1 # node speed [m/s] counting as non-quasi-static
+  monitor_window_s: 0.5 # sustained time over that cap before flagging [s]

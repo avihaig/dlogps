@@ -1,0 +1,57 @@
+# Local stream ON: the GPS block with both streams (GatedGCN over the chain
+# edges + dense global attention carrying the variant's bias). One cell of the
+# matrix per run: `--variant {A,B,C,D,F} --train.seed {0,1,2}`, launched by
+# scripts/train_matrix.sh. Labels are var<VARIANT>_s<SEED>.
+#
+# Variant letters: A = Unbiased, B = Euclidean, C = Chain, D = Mixed,
+# F = Euclidean+Chain only (docs/method.md).
+experiment: local_on
+label: varA_s0
+data: data/release_train
+eval_data: data/unseen_cables_test
+variant: A
+results_root: results
+save_preds: false
+
+train:
+  steps: 100000
+  batch_size: 512
+  sigma: 0.1
+  lr: 0.001
+  lr_final: 0.0001
+  weight_decay: 0.0
+  grad_clip: 1.0
+  seed: 0
+  eval_every: 500
+  eval_batches: 32
+  device: cuda
+  history_frames: 70
+  param_encoding: designed
+
+model:
+  d_model: 128
+  n_heads: 8
+  n_layers: 4
+  dropout: 0.0
+  attn_dropout: 0.0
+  use_global: true
+  use_local: true
+
+split:
+  held_out_fraction: 0.0
+  d_close_diameters: 1.5
+  c_far_segments: 4
+
+# Only the final checkpoint is reported, so no mid-run snapshots are taken; the
+# runner always writes and scores step 100000.
+checkpoint_at: []
+
+eval:
+  stage: unseen_test
+  limit: 400
+  horizons: [1, 10, 50, 100, 200, 400]
+  arms: model
+
+plots:
+  best_by: rel_l2_at_h200
+

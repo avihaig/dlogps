@@ -1,0 +1,9 @@
+# The unseen-cable test set: 40 cables whose parameters lie inside the training
+# ranges and never appear in training (configs/unseen_cables_test.csv).
+# Evaluation only; nothing trains on this root. The paper's tables are computed
+# on it.
+extends: release.yaml
+
+out_dir: data/unseen_cables_test
+seed: 3
+cables_csv: configs/unseen_cables_test.csv

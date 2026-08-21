@@ -1,0 +1,11 @@
+table,block,arm,name,metric,mean,window_sd,seed_sd,source,n_windows
+2,local_on,A,Unbiased,rel_l2_floor_contact,0.0511,0.0536,0.0105,transcribed,
+2,local_on,A,Unbiased,rel_l2_free_flight,0.0062,0.0095,0.0001,transcribed,
+2,local_on,B,Euclidean,rel_l2_floor_contact,0.0510,0.0615,0.0080,transcribed,
+2,local_on,B,Euclidean,rel_l2_free_flight,0.0062,0.0099,0.0005,transcribed,
+2,local_on,C,Chain,rel_l2_floor_contact,0.0529,0.0871,0.0122,transcribed,
+2,local_on,C,Chain,rel_l2_free_flight,0.0064,0.0131,0.0014,transcribed,
+2,local_on,D,Mixed,rel_l2_floor_contact,0.0484,0.0551,0.0135,transcribed,
+2,local_on,D,Mixed,rel_l2_free_flight,0.0058,0.0097,0.0011,transcribed,
+2,local_on,F,Euclidean+Chain only,rel_l2_floor_contact,0.0479,0.0643,0.0068,transcribed,
+2,local_on,F,Euclidean+Chain only,rel_l2_free_flight,0.0061,0.0127,0.0010,transcribed,
