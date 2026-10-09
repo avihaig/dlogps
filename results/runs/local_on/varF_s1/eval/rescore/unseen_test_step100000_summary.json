@@ -1,0 +1,360 @@
+{
+  "stage": "unseen_test",
+  "checkpoint_step": 100000,
+  "horizon": 401,
+  "limit": 400,
+  "n_windows": 400,
+  "regime_horizons": [
+    1,
+    10,
+    50,
+    100,
+    200,
+    400
+  ],
+  "frame_dt_s": 0.002099999925121665,
+  "metrics": {
+    "rmse_h1": {
+      "mean": 0.000135529122430853,
+      "std": 5.5653782199021656e-05,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_at_h1": {
+      "mean": 0.000135529122430853,
+      "std": 5.5653782199021656e-05,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_h10": {
+      "mean": 0.0005281819097217522,
+      "std": 0.000348886088869543,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_at_h10": {
+      "mean": 0.0009444438764148799,
+      "std": 0.0006952432499807909,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_h50": {
+      "mean": 0.0022222043931833468,
+      "std": 0.0018772340650121345,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_at_h50": {
+      "mean": 0.003966688486107159,
+      "std": 0.003641478343257852,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_h100": {
+      "mean": 0.0038186074714758435,
+      "std": 0.003128076404623655,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_at_h100": {
+      "mean": 0.00701999959506793,
+      "std": 0.0054618259420657015,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_h200": {
+      "mean": 0.010606732785527128,
+      "std": 0.00686275411642369,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_at_h200": {
+      "mean": 0.03605121014086762,
+      "std": 0.02444581521680073,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_h400": {
+      "mean": 0.04707624934235355,
+      "std": 0.03210689656799129,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_at_h400": {
+      "mean": 0.11319143289350904,
+      "std": 0.12441890742422641,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_full": {
+      "mean": 0.04707624934235355,
+      "std": 0.03210689656799129,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_h1": {
+      "mean": 0.00011922662771667092,
+      "std": 5.058540842949018e-05,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_at_h1": {
+      "mean": 0.00011922662771667092,
+      "std": 5.058540842949018e-05,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_h10": {
+      "mean": 0.0004573943538525782,
+      "std": 0.00030015977756778965,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_at_h10": {
+      "mean": 0.0008152753376270993,
+      "std": 0.0005897801414434428,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_h50": {
+      "mean": 0.0019101805161699304,
+      "std": 0.0015661858829116632,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_at_h50": {
+      "mean": 0.0034116490965971024,
+      "std": 0.003044590825444818,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_h100": {
+      "mean": 0.003292539707181277,
+      "std": 0.0026238244452043164,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_at_h100": {
+      "mean": 0.006093803890107666,
+      "std": 0.004632152336375995,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_h200": {
+      "mean": 0.008996095936454366,
+      "std": 0.005643396626519806,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_at_h200": {
+      "mean": 0.030140685657679567,
+      "std": 0.019543260486409676,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_h400": {
+      "mean": 0.038299203954229595,
+      "std": 0.028608761587508802,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_at_h400": {
+      "mean": 0.09106746553094126,
+      "std": 0.1169289929308405,
+      "count": 400,
+      "unit": "m"
+    },
+    "mean_l2_full": {
+      "mean": 0.038299203954229595,
+      "std": 0.028608761587508802,
+      "count": 400,
+      "unit": "m"
+    },
+    "rel_l2_h1": {
+      "mean": 0.00010181592670960527,
+      "std": 4.7988123179892185e-05,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_at_h1": {
+      "mean": 0.00010181592670960527,
+      "std": 4.7988123179892185e-05,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_h10": {
+      "mean": 0.00039051208236287496,
+      "std": 0.0002673960993288538,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_at_h10": {
+      "mean": 0.0006958182994185335,
+      "std": 0.0005192603008689045,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_h50": {
+      "mean": 0.0016281065204020707,
+      "std": 0.0013763259546842024,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_at_h50": {
+      "mean": 0.0029094659777911145,
+      "std": 0.002683329703252585,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_h100": {
+      "mean": 0.0028169374943536243,
+      "std": 0.002389821319053351,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_at_h100": {
+      "mean": 0.005260714430041844,
+      "std": 0.004413496019986378,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_h200": {
+      "mean": 0.007891552780347411,
+      "std": 0.005715602990644804,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_at_h200": {
+      "mean": 0.026435816172597697,
+      "std": 0.01925511583879063,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_h400": {
+      "mean": 0.03325232051924104,
+      "std": 0.02858161118204216,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_at_h400": {
+      "mean": 0.07910122644359945,
+      "std": 0.11875766377838136,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_full": {
+      "mean": 0.03325232051924104,
+      "std": 0.02858161118204216,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "link_length_mean_drift": {
+      "mean": 0.02807710191991646,
+      "std": 0.012064522215177419,
+      "count": 400,
+      "unit": "fraction of rest length"
+    },
+    "link_length_max_drift": {
+      "mean": 0.21477550491690636,
+      "std": 0.1502833502375155,
+      "count": 400,
+      "unit": "fraction of rest length"
+    },
+    "selfint_frame_fraction": {
+      "mean": 0.1504364134883508,
+      "std": 0.22408575457271457,
+      "count": 400,
+      "unit": "fraction of frames"
+    },
+    "selfint_pair_fraction": {
+      "mean": 0.0011373148035204394,
+      "std": 0.0021672748146880547,
+      "count": 400,
+      "unit": "fraction of chain-far pairs"
+    },
+    "selfint_worst_penetration": {
+      "mean": 0.0030851760314544664,
+      "std": 0.0029972285106478606,
+      "count": 400,
+      "unit": "m"
+    },
+    "selfint_persists": {
+      "mean": 0.5925,
+      "std": 0.491369260332797,
+      "count": 400,
+      "unit": "fraction of windows"
+    },
+    "rmse_contact": {
+      "mean": 0.06369710787734453,
+      "std": 0.03605259484649478,
+      "count": 235,
+      "unit": "m"
+    },
+    "rmse_free_flight": {
+      "mean": 0.03594062449381086,
+      "std": 0.03584889000055822,
+      "count": 395,
+      "unit": "m"
+    },
+    "contact_frame_fraction": {
+      "mean": 0.2193952693918254,
+      "std": 0.2563299620958932,
+      "count": 400,
+      "unit": "fraction of frames"
+    },
+    "rel_l2_floor_contact": {
+      "mean": 0.05412309402512619,
+      "std": 0.06727360207067562,
+      "count": 400,
+      "unit": "fraction of cable length"
+    },
+    "rel_l2_free_flight": {
+      "mean": 0.005609020150597274,
+      "std": 0.010229412047532476,
+      "count": 345,
+      "unit": "fraction of cable length"
+    },
+    "floor_contact_frame_fraction": {
+      "mean": 0.6716374877467751,
+      "std": 0.1622317225067128,
+      "count": 400,
+      "unit": "fraction of frames"
+    },
+    "rmse_contact_pair_nodes": {
+      "mean": 0.044527135352465386,
+      "std": 0.029297998587205984,
+      "count": 235,
+      "unit": "m"
+    },
+    "rmse_other_nodes": {
+      "mean": 0.0371617392526241,
+      "std": 0.02875611682255058,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_band0": {
+      "mean": 0.048681259826407766,
+      "std": 0.03925007097728115,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_band1": {
+      "mean": 0.02294419103738619,
+      "std": 0.02599351562983508,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_band2": {
+      "mean": 0.03069322603478213,
+      "std": 0.028876066136215267,
+      "count": 400,
+      "unit": "m"
+    },
+    "rmse_band3": {
+      "mean": 0.056642300665116635,
+      "std": 0.04428662653584305,
+      "count": 400,
+      "unit": "m"
+    }
+  }
+}

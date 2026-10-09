@@ -16,6 +16,7 @@ __pycache__/
 !/results/runs/
 !/results/tables/
 results/runs/**/checkpoints/
+/results/runs/.cache/
 *.pt
 *.pth
 *.ckpt

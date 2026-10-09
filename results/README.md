@@ -4,8 +4,15 @@
 the resolved `config.yaml`, `env.json`, the training log and the unseen-test
 scorecard under `eval/model/` — and `tables/` holds the paper's two tables as
 regenerated from those records by `scripts/make_tables.py` (docs/reproduction.md).
-Checkpoints (`step_100000.pt`, ~3.5 MB each) are release assets;
+Checkpoints (`step_100000.pt`, 2 to 18 MB each) are on the Hugging Face Hub,
+[avihaig/dlogps-checkpoints](https://huggingface.co/avihaig/dlogps-checkpoints),
+with each run's per-window, per-cable and per-frame scores;
 `scripts/fetch_checkpoints.sh` places them beside the records.
+
+The records keep the names the runs had during development (`config.yaml`
+says `experiment: b7_encoding`, `label: varF_enc_s0`, and so on).
+`runs/provenance.csv` maps each folder to its source run, the development
+commit it ran from, and whether that working tree had uncommitted changes.
 
 ## Run ↔ table row
 
@@ -25,14 +32,13 @@ Table 2 uses the `local_on` rows only.
 
 ## What this checkout contains
 
-| experiment | records present | cells recomputed |
-|---|---|---|
-| `local_on` | 15 of 15 (`unseen_test_step100000_summary.json`) | Table 1 local-on block: all 15 cells match the paper |
-| `local_off` | pending sync | transcribed from the paper |
-| `chain_only` | pending sync | transcribed from the paper |
-| `structfree` | pending sync | transcribed from the paper |
-| Table 2 phase columns | pending (the local-on runs are re-scored with `error_by_floor_phase`) | transcribed from the paper |
+The record of all 39 runs. The 15 `local_on` runs predate the phase split, so
+each also carries `eval/rescore/unseen_test_step100000_summary.json`: its
+checkpoint re-scored with `scripts/evaluate_final.sh` on the released test root.
+Table 2 reads its two metrics from there; Table 1 reads each run's own
+scorecard. The re-scoring reproduces the run's own Table 1 metrics to within
+0.1%, the floating-point difference between the two GPUs.
 
-`python scripts/make_tables.py` prints the current count and flags any
-recomputed cell that disagrees with the paper; `tables/*.csv` carry the per-cell
-`source` column.
+`python scripts/make_tables.py --check` recomputes all 49 cells of Tables 1 and
+2 from these records and checks each against the paper at its printed
+precision; `tables/*.csv` carry the per-cell `source` column.

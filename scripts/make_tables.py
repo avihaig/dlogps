@@ -13,7 +13,9 @@ sds ± sd (n−1) of the three seed means**. Bold marks the lowest mean per bloc
 (Table 1) or per column (Table 2).
 
 Inputs, one per run: ``results/runs/<experiment>/<label>/eval/model/
-unseen_test_step100000_summary.json`` (written by ``dlogps.harness.evaluate``).
+unseen_test_step100000_summary.json`` (written by ``dlogps.harness.evaluate``),
+and for the local-on runs its re-scoring under ``eval/rescore/``, which carries
+the phase split the original runs did not record (``summary_paths``).
 An arm whose three seed records are absent is filled from
 ``results/tables/paper_values.csv`` and marked ``transcribed`` in the CSV, so the
 rendered tables always show the paper's numbers and the ``source`` column says
@@ -88,19 +90,32 @@ class Cell:
         return f"{self.mean:.{decimals}f}\\pm{self.window_sd:.{decimals}f}\\pm{self.seed_sd:.{decimals}f}"
 
 
-def summary_path(experiment: str, label: str) -> Path:
-    return RUNS / experiment / label / "eval" / "model" / f"unseen_test_step{STEP}_summary.json"
+def summary_paths(experiment: str, label: str) -> tuple[Path, Path]:
+    """The run's own scorecard, then its re-scoring with the released code.
+
+    The local-on runs predate the phase split, so their Table 2 metrics come from
+    re-scoring the released checkpoints on the released test root
+    (``scripts/evaluate_final.sh``), kept beside the original as ``eval/rescore/``.
+    """
+    name = f"unseen_test_step{STEP}_summary.json"
+    eval_dir = RUNS / experiment / label / "eval"
+    return eval_dir / "model" / name, eval_dir / "rescore" / name
 
 
 def cell_from_records(experiment: str, pattern: str, metric: str) -> Cell | None:
-    """The triple from three seed summaries, or None if any seed record is missing."""
+    """The triple from three seed summaries, or None if any seed record is missing.
+
+    Each seed's metric is read from the run's own scorecard, or from its re-scoring
+    when the scorecard does not carry it.
+    """
     means, sds, counts = [], [], []
     for seed in SEEDS:
-        path = summary_path(experiment, pattern.format(seed=seed))
-        if not path.is_file():
-            return None
-        payload = json.loads(path.read_text())
-        entry = payload["metrics"].get(metric)
+        entry = None
+        for path in summary_paths(experiment, pattern.format(seed=seed)):
+            if path.is_file():
+                entry = json.loads(path.read_text())["metrics"].get(metric)
+                if entry is not None:
+                    break
         if entry is None or entry.get("mean") is None or math.isnan(entry["mean"]):
             return None
         means.append(float(entry["mean"]))

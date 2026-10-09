@@ -35,12 +35,16 @@ def test_recomputed_cells_match_the_paper() -> None:
     assert len(table2) == 5 * 2, "five rows, two phases"
     assert mt.check_against_paper(table1, "1", paper) == []
     assert mt.check_against_paper(table2, "2", paper) == []
-    # The local-on block of Table 1 is recomputed from the shipped summaries.
+    # Every cell of both tables is recomputed from the shipped records.
+    for cells in (table1, table2):
+        for key, cell in cells.items():
+            assert cell.source == "records", key
     for arm in mt.VARIANT_NAMES:
         for metric in mt.TABLE1_METRICS:
-            cell = table1[("local_on", arm, metric)]
-            assert cell.source == "records", (arm, metric)
-            assert cell.n_windows == (400, 400, 400)
+            assert table1[("local_on", arm, metric)].n_windows == (400, 400, 400)
+        # The phase split's eligible windows: 400 floor contact, 345 free flight.
+        assert table2[("local_on", arm, "rel_l2_floor_contact")].n_windows == (400, 400, 400)
+        assert table2[("local_on", arm, "rel_l2_free_flight")].n_windows == (345, 345, 345)
 
 
 @pytest.mark.contract
@@ -88,6 +92,33 @@ def test_the_cell_statistic_is_mean_of_means_mean_of_sds_sd_of_means(tmp_path: P
     assert cell.seed_sd == pytest.approx(0.1)
     assert cell.n_windows == (400, 400, 400)
     assert mt.cell_from_records("local_on", "varB_s{seed}", "rel_l2_h400") is None
+
+
+@pytest.mark.contract
+def test_the_rescoring_only_fills_metrics_the_scorecard_lacks(tmp_path: Path) -> None:
+    mt = _load_module()
+    mt.RUNS = tmp_path
+    import json
+
+    for seed in mt.SEEDS:
+        own, rescore = mt.summary_paths("local_on", f"varA_s{seed}")
+        for path, metrics in (
+            (own, {"rel_l2_h400": {"mean": 0.1, "std": 0.01, "count": 400}}),
+            (
+                rescore,
+                {
+                    "rel_l2_h400": {"mean": 0.9, "std": 0.09, "count": 400},
+                    "rel_l2_floor_contact": {"mean": 0.2, "std": 0.02, "count": 400},
+                },
+            ),
+        ):
+            path.parent.mkdir(parents=True)
+            path.write_text(json.dumps({"metrics": metrics}))
+
+    own_cell = mt.cell_from_records("local_on", "varA_s{seed}", "rel_l2_h400")
+    filled = mt.cell_from_records("local_on", "varA_s{seed}", "rel_l2_floor_contact")
+    assert own_cell is not None and own_cell.mean == pytest.approx(0.1)
+    assert filled is not None and filled.mean == pytest.approx(0.2)
 
 
 def test_paper_values_cover_every_table_cell() -> None:

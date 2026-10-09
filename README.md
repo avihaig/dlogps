@@ -1,6 +1,9 @@
 # Predicting Cable Dynamics with Physical Attention Bias
 
 [![arXiv](https://img.shields.io/badge/arXiv-2610.11975-b31b1b.svg)](https://arxiv.org/abs/2610.11975)
+[![Paper page](https://huggingface.co/datasets/huggingface/badges/resolve/main/paper-page-sm.svg)](https://huggingface.co/papers/2610.11975)
+[![Dataset on HF](https://huggingface.co/datasets/huggingface/badges/resolve/main/dataset-on-hf-sm.svg)](https://huggingface.co/datasets/avihaig/dlogps-cables)
+[![Models on HF](https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-sm.svg)](https://huggingface.co/avihaig/dlogps-checkpoints)
 
 Avihai Giuili\*, Rotem Atari\*, Avishai Sintov (Tel Aviv University),
 Maya Bechler-Speicher (Meta AI). \*Equal contribution.
@@ -9,7 +12,9 @@ Extended abstract at the **NeurIPS 2026 Workshop on Symmetry and Geometry in
 Neural Representations (NeurReps)**.
 Paper: [arXiv:2610.11975](https://arxiv.org/abs/2610.11975) ·
 [PDF](paper/predicting-cable-dynamics-with-physical-attention-bias.pdf) ·
-[LaTeX source](paper/src/) · [BibTeX](#citation)
+[LaTeX source](paper/src/) · [BibTeX](#citation).
+Data: [avihaig/dlogps-cables](https://huggingface.co/datasets/avihaig/dlogps-cables) ·
+checkpoints: [avihaig/dlogps-checkpoints](https://huggingface.co/avihaig/dlogps-checkpoints).
 
 A cable has two pairwise distances that agree only while it is straight: the
 arc-length distance along the chain, which governs elastic forces, and the
@@ -74,7 +79,7 @@ vertex at or below one diameter; 400 and 345 eligible windows):
 | [docs/metrics.md](docs/metrics.md) | rel ℓ2, link-length drift, self-intersection, the phase split, aggregation |
 | [docs/reproduction.md](docs/reproduction.md) | regenerate the tables · smoke run · the full matrix · scoring released checkpoints |
 | [src/dlogps/](src/dlogps/) | `data/` loader and labels · `model/` the GPS block, bias plugins, structure-free arms · `harness/` training, rollout, metrics, artifacts, the experiment runner |
-| [configs/](configs/) | `experiments/{local_on,local_off,chain_only,structfree,smoke}.yaml` and the data-generation records (`release*.yaml`, cable populations) |
+| [configs/](configs/) | `experiments/{local_on,local_off,chain_only,structfree,smoke}.yaml` and the data-generation records (`release*.yaml`, `*_cables_test.yaml`, cable populations) |
 | [scripts/](scripts/) | `train_matrix.sh` · `train_baselines.sh` · `evaluate_final.sh` · `make_tables.py` · `merge_release_train.py` · `smoke.sh` · `link_data.sh` · `fetch_checkpoints.sh` |
 | [results/](results/README.md) | per-run records behind every table row, and the regenerated tables |
 | [assets/](assets/sample_v1/README.md) | two real cables of the released data, for the smoke run and the tests |
@@ -93,14 +98,18 @@ scripts/smoke.sh              # the whole pipeline on the bundled sample, minute
 python scripts/make_tables.py --check   # Tables 1-2 from the shipped run records
 ```
 
-Training the 39 runs needs the dataset (≈16 GB, [docs/data.md](docs/data.md))
-and about 30 GPU-hours on one RTX 5090:
+Training the 39 runs needs the dataset (≈26 GB on the Hugging Face Hub,
+[docs/data.md](docs/data.md)) and about 30 GPU-hours on one RTX 5090:
 
 ```bash
+hf download avihaig/dlogps-cables --repo-type dataset --local-dir /path/to/dlogps-data   # pip install -U huggingface_hub
 export DLOGPS_DATA=/path/to/dlogps-data && scripts/link_data.sh
-python scripts/merge_release_train.py --inputs data/release_v1 data/test_v1 --out data/release_train
 scripts/train_matrix.sh --local on && scripts/train_matrix.sh --local off && scripts/train_baselines.sh
 ```
+
+The 39 trained checkpoints are on the Hub too: `scripts/fetch_checkpoints.sh`
+places them beside their records and `scripts/evaluate_final.sh` re-scores them
+([docs/reproduction.md](docs/reproduction.md)).
 
 ## Citation
 

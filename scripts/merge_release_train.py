@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 """Build the training root ``release_train`` from ``release_v1`` and ``test_v1``.
 
-The two released roots hold the same 46 cables, 50 episodes each, released from
+The two generator runs hold the same 46 cables, 50 episodes each, released from
 different start poses (the generator seed is the only difference between
 ``configs/release.yaml`` and ``configs/release_test.yaml``). Every reported run
 trains on their union: 46 cables x 100 episodes. This script writes that union
 in the same ``cable_XXX/episodes.npz`` + ``params.yaml`` layout the loader
 reads, concatenating the episodes of each cable along the episode axis and
 re-padding to the longer of the two padded lengths.
+
+The released dataset ships the merged root, so a download never needs this
+script (docs/data.md); it is the record of how ``release_train`` was built.
 
     python scripts/merge_release_train.py \\
         --inputs data/release_v1 data/test_v1 --out data/release_train

@@ -1,0 +1,8 @@
+# The seen-cable test set: the 46 training cables (configs/release_cables.csv),
+# released from poses neither training half used. Only `seed` and `out_dir`
+# differ from release.yaml. Evaluation only, and not used in the paper's
+# tables; it is released beside the other roots (docs/data.md).
+extends: release.yaml
+
+out_dir: data/seen_cables_test
+seed: 2

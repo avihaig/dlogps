@@ -9,12 +9,12 @@ python scripts/make_tables.py --check
 ```
 
 reads `results/runs/<experiment>/<label>/eval/model/unseen_test_step100000_summary.json`
-for every run, recomputes each cell of Tables 1 and 2 and compares it with the
-paper at its printed precision (`results/tables/paper_values.csv`). The outputs
-are `results/tables/table{1,2}_*.{csv,md,tex}`; the CSVs' `source` column says
-whether a cell was recomputed from records or transcribed from the paper because
-the records are not yet in the checkout (results/README.md lists what is
-there). `tests/test_tables.py` runs the same check.
+for every run, and for the local-on phase split the re-scoring beside it under
+`eval/rescore/` (results/README.md). It recomputes all 49 cells of Tables 1 and
+2 and compares each with the paper at its printed precision
+(`results/tables/paper_values.csv`). The outputs are
+`results/tables/table{1,2}_*.{csv,md,tex}`, whose CSVs carry a per-cell
+`source` column. `tests/test_tables.py` runs the same check.
 
 ## 2. The smoke run: the whole pipeline on the bundled sample (minutes, CPU)
 
@@ -46,12 +46,11 @@ other arms. A full-size run has exactly this layout with `step_100000`.
 
 ## 3. The paper's 39 runs (about 30 GPU-hours on an RTX 5090)
 
-1. **Data** (docs/data.md): place `release_v1/`, `test_v1/` and
-   `unseen_cables_test/` under one directory, then
+1. **Data** (docs/data.md): download the released roots and link them
    ```bash
+   hf download avihaig/dlogps-cables --repo-type dataset --local-dir /path/to/dlogps-data
    export DLOGPS_DATA=/path/to/dlogps-data
    scripts/link_data.sh
-   python scripts/merge_release_train.py --inputs data/release_v1 data/test_v1 --out data/release_train
    ```
 2. **Train and score** (each arm ends by scoring its final checkpoint on the
    400 unseen-test windows; completed arms are skipped on restart):
@@ -70,9 +69,16 @@ other arms. A full-size run has exactly this layout with `step_100000`.
 ### Scoring a released checkpoint instead of training
 
 ```bash
-scripts/fetch_checkpoints.sh                   # GitHub release assets -> results/runs/**/checkpoints/
+scripts/fetch_checkpoints.sh                   # avihaig/dlogps-checkpoints -> results/runs/**/checkpoints/
 scripts/evaluate_final.sh results/runs/local_on/varF_s0 [...]
 ```
+
+The checkpoints come from the Hugging Face model repo
+[avihaig/dlogps-checkpoints](https://huggingface.co/avihaig/dlogps-checkpoints),
+which also holds each run's full record (training log, per-window scores) and a
+`provenance.csv` naming the run each folder came from. Scoring needs only the
+test root (`hf download avihaig/dlogps-cables --repo-type dataset --include
+"unseen_cables_test/*" --local-dir /path/to/dlogps-data`).
 
 `evaluate_final.sh` runs `python -m dlogps.harness.evaluate` with the paper's
 protocol (`--stage unseen_test --horizon 401 --horizons 1,10,50,100,200,400

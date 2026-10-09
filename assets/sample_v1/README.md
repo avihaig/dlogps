@@ -2,7 +2,8 @@
 
 Two cables × two complete episodes from the released training data, generated
 by `configs/release.yaml` unchanged: a true subset, so anything written against
-it runs on `release_v1` with nothing changed.
+it runs on `release_train` with nothing changed. In `release_train` these are
+episodes 0 and 1 of each cable.
 
 | cable | material | L [m] | d [m] | E [Pa] | episodes |
 |---|---|---|---|---|---|

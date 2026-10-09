@@ -5,7 +5,7 @@
 # end; use it to score a checkpoint fetched from the release
 # (scripts/fetch_checkpoints.sh) without retraining.
 #
-#   scripts/evaluate_final.sh results/local_on/runs/<run_dir> [more run dirs...]
+#   scripts/evaluate_final.sh results/runs/local_on/varF_s0 [more run dirs...]
 #
 # Environment: PYTHON (default: python), DEVICE (default: cuda),
 # DATA (default: data/unseen_cables_test).
