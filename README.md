@@ -1,21 +1,30 @@
-# Which Structural Prior Belongs in Global Attention?
+# Predicting Cable Dynamics with Physical Attention Bias
 
-**A Controlled Study of a Hybrid Graph Transformer as a Cable-Dynamics Model**
+[![arXiv](https://img.shields.io/badge/arXiv-2610.11975-b31b1b.svg)](https://arxiv.org/abs/2610.11975)
 
-Avihai Giuili, Rotem Atari — Tel Aviv University.
-Paper: [`paper/which-structural-prior-belongs-in-global-attention.pdf`](paper/which-structural-prior-belongs-in-global-attention.pdf)
+Avihai Giuili\*, Rotem Atari\*, Avishai Sintov (Tel Aviv University),
+Maya Bechler-Speicher (Meta AI). \*Equal contribution.
 
-A cable is a chain embedded in 3-D space, so it has two notions of locality that
-need not agree: elastic interactions follow arc-length proximity along the chain,
-self-contact follows Euclidean proximity. We train a GraphGPS-style learned
-simulator of a falling cable (MuJoCo, 46 training cables, 40 unseen test cables)
-and hold the block, the training protocol and the evaluation windows fixed while
-changing only an additive bias inside the global-attention softmax: **none,
-Euclidean distance, chain distance, or two allocations of these across heads** —
-with the local message-passing stream on and off, against chain-only, MLP and
-LSTM baselines. Floor-contact error is about eight times free-flight error; the
-mixed allocations have the lowest means, as a three-seed table order rather than
-a separated effect.
+Extended abstract at the **NeurIPS 2026 Workshop on Symmetry and Geometry in
+Neural Representations (NeurReps)**.
+Paper: [arXiv:2610.11975](https://arxiv.org/abs/2610.11975) ·
+[PDF](paper/predicting-cable-dynamics-with-physical-attention-bias.pdf) ·
+[LaTeX source](paper/src/) · [BibTeX](#citation)
+
+A cable has two pairwise distances that agree only while it is straight: the
+arc-length distance along the chain, which governs elastic forces, and the
+Euclidean distance in space, which governs contact. We add a *physical attention
+bias*, an additive term on the global-attention logits with a learned rate per
+head, to a GraphGPS-style learned simulator of a falling cable (MuJoCo, 46
+training cables, 40 unseen test cables), and ask which distance it should use:
+**none, Euclidean, chain, or both on disjoint sets of heads**. The block, the
+training protocol and the evaluation windows stay fixed; every variant runs with
+the local message-passing stream on and off, against chain-only, MLP and LSTM
+baselines. A physical bias improves prediction on unseen cables, most when
+attention is the only path between distant segments: there the chain bias cuts
+rel ℓ2 by 15% and more than halves link-length drift. Assigning both distances
+across heads is best or near-best on every metric; with the local stream on,
+that ranking is a three-seed ordering inside the window spread.
 
 ## Results
 
@@ -58,6 +67,7 @@ vertex at or below one diameter; 400 and 345 eligible windows):
 
 | | |
 |---|---|
+| [paper/](paper/README.md) | the camera-ready PDF and its LaTeX source |
 | [docs/method.md](docs/method.md) | representation, the hybrid block, the bias equation and the five variants, the baselines |
 | [docs/data.md](docs/data.md) | the MuJoCo protocol, the populations, the on-disk format, how to obtain the data |
 | [docs/experiments.md](docs/experiments.md) | training protocol, rollouts, the 39-run matrix, reporting rules, compute |
@@ -90,6 +100,21 @@ and about 30 GPU-hours on one RTX 5090:
 export DLOGPS_DATA=/path/to/dlogps-data && scripts/link_data.sh
 python scripts/merge_release_train.py --inputs data/release_v1 data/test_v1 --out data/release_train
 scripts/train_matrix.sh --local on && scripts/train_matrix.sh --local off && scripts/train_baselines.sh
+```
+
+## Citation
+
+```bibtex
+@inproceedings{giuili2026predicting,
+  title         = {Predicting Cable Dynamics with Physical Attention Bias},
+  author        = {Giuili, Avihai and Atari, Rotem and Sintov, Avishai and Bechler-Speicher, Maya},
+  booktitle     = {NeurIPS 2026 Workshop on Symmetry and Geometry in Neural Representations (NeurReps)},
+  year          = {2026},
+  eprint        = {2610.11975},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+  url           = {https://arxiv.org/abs/2610.11975}
+}
 ```
 
 ## License

@@ -20,6 +20,16 @@ results/runs/**/checkpoints/
 *.pth
 *.ckpt
 
+# LaTeX build output; paper/src/ builds in place
+/paper/src/*.aux
+/paper/src/*.bbl
+/paper/src/*.blg
+/paper/src/*.fdb_latexmk
+/paper/src/*.fls
+/paper/src/*.log
+/paper/src/*.out
+/paper/src/main.pdf
+
 # Editor / OS
 .DS_Store
 .idea/

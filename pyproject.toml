@@ -1,7 +1,7 @@
 [project]
 name = "dlogps"
 version = "1.0.0"
-description = "Which structural prior belongs in global attention? A controlled study of a hybrid graph transformer as a cable-dynamics model."
+description = "Predicting cable dynamics with physical attention bias: a GraphGPS-style learned simulator for falling cables and the attention-bias variants the paper compares."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.13"
